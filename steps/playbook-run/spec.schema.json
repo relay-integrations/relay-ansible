@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "ssh": {
+      "type": "object",
+      "description": "The SSH configuration to use when connecting to hosts with Ansible.",
+      "properties": {
+        "connection": {
+          "type": "object",
+          "x-relay-connectionType": "ssh",
+          "description": "A Relay SSH connection to use",
+          "properties": {
+            "sshKey": {
+              "type": "string",
+              "description": "The SSH key to use when cloning the git repository."
+            },
+            "knownHosts": {
+              "type": "string",
+              "description": "SSH known hosts file."
+            }
+          }
+        }
+      }
+    },
+    "git": {
+      "type": "object",
+      "description": "A Git repository with one or more Ansible playbooks to run.",
+      "properties": {
+        "connection": {
+          "type": "object",
+          "x-relay-connectionType": "ssh",
+          "description": "A Relay SSH connection to use",
+          "properties": {
+            "sshKey": {
+              "type": "string",
+              "description": "The SSH key to use when cloning the git repository."
+            },
+            "knownHosts": {
+              "type": "string",
+              "description": "SSH known hosts file."
+            }
+          }
+        },
+        "name": {
+          "type": "string",
+          "description": "A directory name for the git clone."
+        },
+        "branch": {
+          "type": "string",
+          "description": "The Git branch to clone.",
+          "default": "master"
+        },
+        "repository": {
+          "type": "string",
+          "description": "The Git repository URL."
+        }
+      },
+      "required": [
+        "name",
+        "repository"
+      ]
+    },
+    "directory": {
+      "type": "string",
+      "description": "The subdirectory of the Git repository to switch to, if needed."
+    },
+    "inventories": {
+      "type": "array",
+      "description": "A list of inventory targets (comma-separated hostnames, files, or directories) to connect to.",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "galaxy": {
+      "type": "object",
+      "description": "Configuration for Ansible Galaxy.",
+      "properties": {
+        "collections": {
+          "type": "array",
+          "description": "A list of Ansible Galaxy collections to install.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "extraVars": {
+      "type": "object",
+      "description": "A mapping of additional variables to set when running the playbooks."
+    },
+    "playbooks": {
+      "type": "array",
+      "description": "A list of playbook files to run against the given inventory targets.",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "inventories",
+    "playbooks"
+  ]
+}

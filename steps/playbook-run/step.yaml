@@ -1,0 +1,45 @@
+apiVersion: integration/v1
+kind: Step
+name: playbook-run
+version: 1
+summary: Run one or more Ansible playbooks
+description: |
+  Runs a set of Ansible playbooks from a Git repository against defined
+  inventories.
+build:
+  apiVersion: build/v1
+  kind: Docker
+publish:
+  repository: relaysh/ansible-step-playbook-run
+schemas:
+  spec:
+    source: file
+    file: spec.schema.json
+examples:
+- summary: Run an Ansible playbook
+  content:
+    apiVersion: v1
+    kind: Step
+    name: ansible-step-playbook-run
+    image: relaysh/ansible-step-playbook-run
+    spec:
+      git:
+        connection: ${connections.ssh.my-github-deploy-key}
+        name: ansible
+        repository: ${parameters.git-repository}
+      ssh:
+        connection: ${connections.ssh.my-ansible-key}
+      inventories:
+      - foo.example.com,
+      - bar.example.com,quux.example.com
+      - prod
+      galaxy:
+        collections:
+        - ansible.utils
+      extraVars:
+        ansible_user: test
+        ansible_become: true
+        ansible_become_user: root
+      playbooks:
+      - a.yaml
+      - b.yaml
